@@ -50,17 +50,26 @@ public class LoanRequestWebService {
 		return new LoanSuccessMessage(res);
 	}
 	@GetMapping(CgConstants.APPROVED_LOAN_REQUESTS_URL)
-	public List<LoanRequest> getAcceptedLoanRequests() throws NoRequestsFoundException {
+	public List<LoanRequest> getAcceptedLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
+       logger.info(CgConstants.TOKEN_ID+ tokenId);
+		String role=loanService.validateTokenInAdminLoginService(tokenId);
+		logger.info(CgConstants.ROLE+role);
 		List<LoanRequest> loanRequestAcceptedList= loanService.viewAcceptedLoans();
 		return loanRequestAcceptedList;
 	}
 	@GetMapping(CgConstants.REJECTED_LOAN_REQUESTS_URL)
-	public List<LoanRequest> getRejectedLoanRequests() throws NoRequestsFoundException {
+	public List<LoanRequest> getRejectedLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
+		logger.info(CgConstants.TOKEN_ID+ tokenId);
+		String role=loanService.validateTokenInAdminLoginService(tokenId);
+		logger.info(CgConstants.ROLE+role);
 		List<LoanRequest> loanRequestRejectedList= loanService.viewRejectedLoans();
 		return loanRequestRejectedList;
 	}
 	@GetMapping(CgConstants.UPDATED_ACCOUNT_LIST_URL)
-	public List<Account> getUpdatedAccountList(){
+	public List<Account> getUpdatedAccountList(@RequestHeader(name="tokenId",required=false) String tokenId) throws LoginException{
+		logger.info(CgConstants.TOKEN_ID+ tokenId);
+		String role=loanService.validateTokenInAdminLoginService(tokenId);
+		logger.info(CgConstants.ROLE+role);
 		List<Account> accList=loanService.getUpdatedAccountList();
 		return accList;
 	}

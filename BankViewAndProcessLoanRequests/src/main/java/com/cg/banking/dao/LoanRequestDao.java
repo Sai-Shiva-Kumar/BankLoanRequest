@@ -10,10 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.cg.banking.entity.LoanRequest;
 @Repository
 public interface LoanRequestDao extends JpaRepository<LoanRequest, String>{
-/*@Query(value="update LoanRequest lr set lr.reqStatus=:status where lr.loanRequestId=:Id")
-public LoanRequest processLoanRequest(@Param("status") String reqStatus, @Param("Id") String loanRequestId);
-
-*/	
 
 @Query(value="from LoanRequest lq where  reqStatus=:status")
 public List<LoanRequest> getPendingRequests(@Param("status") String req);
