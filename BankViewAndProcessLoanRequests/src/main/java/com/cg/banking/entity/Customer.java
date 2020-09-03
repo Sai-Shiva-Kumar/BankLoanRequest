@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Customer {
 	
 	@Id
-	@Column(name="customer_id", length=10)
+	@Column(name="customer_id", length=30)
 	private String customerId;
 	@Column(name="customer_name", length=25)
 	private String customerName;

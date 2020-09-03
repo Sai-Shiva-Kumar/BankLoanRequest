@@ -37,8 +37,7 @@ public class LoanRequestWebService {
 	@GetMapping(CgConstants.VIEW_ALL_PENDING_REQUESTS)
 	public List<LoanRequest> getLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
 		logger.info(CgConstants.TOKEN_ID+ tokenId);
-		
-		String role=loanService.validateTokenInAdminLoginService(tokenId);
+				String role=loanService.validateTokenInAdminLoginService(tokenId);
 		logger.info(CgConstants.ROLE+role);
 	    List<LoanRequest> loanRequestList= loanService.viewAllLoanRequests();
 		return loanRequestList;
