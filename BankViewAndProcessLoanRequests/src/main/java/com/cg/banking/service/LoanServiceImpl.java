@@ -19,10 +19,10 @@ import com.cg.banking.exceptions.LoanProcessingException;
 import com.cg.banking.exceptions.LoginException;
 import com.cg.banking.exceptions.NoRequestsFoundException;
 import com.cg.banking.util.CgConstants;
-import com.cg.banking.web.LoanRequestWebService;
+import com.cg.banking.web.ViewAndProcessLoanRestController;
 @Service
 public class LoanServiceImpl implements ILoanService {
-	Logger logger = LoggerFactory.getLogger(LoanRequestWebService.class);
+	Logger logger = LoggerFactory.getLogger(ViewAndProcessLoanRestController.class);
 	
 	@Autowired
 	private LoanRequestDao loanRequestDao;

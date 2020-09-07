@@ -1,6 +1,5 @@
 package com.cg;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,14 +19,20 @@ class BankViewAndProcessLoanRequestsApplicationTests {
 	ILoanService loanService;
 	
 	@Test
-	void getLoanRequestsTest1() throws NoRequestsFoundException {
-		List<LoanRequest> list=loanService.viewAllLoanRequests();
-		assertTrue(!list.isEmpty());
+	void getLoanRequestsFailTest1() throws NoRequestsFoundException {
+		assertThrows(NoRequestsFoundException.class,()->loanService.viewAllLoanRequests());
 	}
 	@Test
-	void approvedLoanRequestsNotFoundTest2() throws NoRequestsFoundException {
+	void approvedLoanRequestsFoundTest2() throws NoRequestsFoundException {
 		
-	   assertThrows(NoRequestsFoundException.class,()->loanService.viewAcceptedLoans());
+		List<LoanRequest> list=loanService.viewAcceptedLoans();
+		assertTrue(!list.isEmpty());;
+	}
+	@Test
+	void rejectedLoanRequestsFoundTest2() throws NoRequestsFoundException {
+		
+		List<LoanRequest> list=loanService.viewRejectedLoans();
+		assertTrue(!list.isEmpty());;
 	}
 	@Test
 	public void testProcessByIdFound() throws NoRequestsFoundException, LoanProcessingException {

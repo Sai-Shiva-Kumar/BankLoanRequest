@@ -23,9 +23,9 @@ import com.cg.banking.util.CgConstants;
 
 @RestController
 @CrossOrigin(origins={"http://localhost:4200"})
-public class LoanRequestWebService {
+public class ViewAndProcessLoanRestController {
 	
-	Logger logger = LoggerFactory.getLogger(LoanRequestWebService.class);
+	Logger logger = LoggerFactory.getLogger(ViewAndProcessLoanRestController.class);
 	
 	@Autowired
 	private ILoanService loanService;
