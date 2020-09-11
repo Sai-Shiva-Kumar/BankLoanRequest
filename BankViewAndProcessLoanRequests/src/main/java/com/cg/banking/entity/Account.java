@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name="cap_account")
 public class Account {
 	@Id
-	@Column(name="account_id", length=30)
+	@Column(name="account_id", length=30, unique=true)
 	private String accountId;
 	@Column(name="account_name", length=25)
 	private String accountName;
