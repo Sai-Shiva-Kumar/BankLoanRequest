@@ -1,5 +1,5 @@
 package com.cg.banking.dto;
-
+// for displaying success messages
 public class LoanSuccessMessage {
 
 	private String message;

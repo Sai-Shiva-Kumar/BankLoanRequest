@@ -34,7 +34,9 @@ public class ViewAndProcessLoanRestController {
 	@Autowired
 	private RestTemplate rt;
 	
-	@GetMapping(CgConstants.VIEW_ALL_PENDING_REQUESTS)
+	
+	//viewing all the pending loan requests
+	@GetMapping(CgConstants.VIEW_ALL_PENDING_REQUESTS) //get method for fetching the details
 	public List<LoanRequest> getLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
 		logger.info(CgConstants.TOKEN_ID+ tokenId);
 				String role=loanService.validateTokenInAdminLoginService(tokenId);
@@ -43,12 +45,17 @@ public class ViewAndProcessLoanRestController {
 		return loanRequestList;
 	}
 	
-	@GetMapping(CgConstants.PROCESS_REQUESTS_BY_ID)
+	
+	//to process loan requests raised by customer based on the loan request ID
+	@GetMapping(CgConstants.PROCESS_REQUESTS_BY_ID)  //get method for fetching the details
 	public LoanSuccessMessage processLoanRequest(@PathVariable("reqID") String requestId) throws NoRequestsFoundException, LoanProcessingException {
 		String res=loanService.processLoanRequest(requestId);
-		return new LoanSuccessMessage(res);
+		return new LoanSuccessMessage(res); //displays the success message
 	}
-	@GetMapping(CgConstants.APPROVED_LOAN_REQUESTS_URL)
+	
+	
+	//to view the approved loans
+	@GetMapping(CgConstants.APPROVED_LOAN_REQUESTS_URL) //get method for fetching details
 	public List<LoanRequest> getAcceptedLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
        logger.info(CgConstants.TOKEN_ID+ tokenId);
 		String role=loanService.validateTokenInAdminLoginService(tokenId);
@@ -56,7 +63,10 @@ public class ViewAndProcessLoanRestController {
 		List<LoanRequest> loanRequestAcceptedList= loanService.viewAcceptedLoans();
 		return loanRequestAcceptedList;
 	}
-	@GetMapping(CgConstants.REJECTED_LOAN_REQUESTS_URL)
+	
+	
+	//to view rejected loans
+	@GetMapping(CgConstants.REJECTED_LOAN_REQUESTS_URL)  //get method for fetching details
 	public List<LoanRequest> getRejectedLoanRequests(@RequestHeader(name="tokenId",required=false) String tokenId) throws NoRequestsFoundException, LoginException {
 		logger.info(CgConstants.TOKEN_ID+ tokenId);
 		String role=loanService.validateTokenInAdminLoginService(tokenId);
@@ -64,7 +74,10 @@ public class ViewAndProcessLoanRestController {
 		List<LoanRequest> loanRequestRejectedList= loanService.viewRejectedLoans();
 		return loanRequestRejectedList;
 	}
-	@GetMapping(CgConstants.UPDATED_ACCOUNT_LIST_URL)
+	
+	
+	//to view account details
+	@GetMapping(CgConstants.UPDATED_ACCOUNT_LIST_URL) //get method for fetching details
 	public List<Account> getUpdatedAccountList(@RequestHeader(name="tokenId",required=false) String tokenId) throws LoginException{
 		logger.info(CgConstants.TOKEN_ID+ tokenId);
 		String role=loanService.validateTokenInAdminLoginService(tokenId);

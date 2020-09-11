@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.cg.banking.entity.Account;
 @Repository
 public interface IAccountDao extends JpaRepository<Account, String>{
-//account dao
+//This DAO is used to create a loan account
 }

@@ -33,6 +33,7 @@ public class LoanServiceImpl implements ILoanService {
 	@Autowired
 	private RestTemplate rt;
 	
+	//to display all the pending loan request
 	@Override
 	public List<LoanRequest> viewAllLoanRequests() throws NoRequestsFoundException {
 		List<LoanRequest> loanRequestList= loanRequestDao.getPendingRequests(CgConstants.PENDING_REQUESTS);
@@ -42,6 +43,7 @@ public class LoanServiceImpl implements ILoanService {
 		return loanRequestList;
 	}
 	
+	//Method to process loan request by using loan request id
 	@Override
 	@Transactional
 	public String processLoanRequest(String loanRequestId) throws NoRequestsFoundException, LoanProcessingException {
@@ -52,25 +54,39 @@ public class LoanServiceImpl implements ILoanService {
 		String custId=req.getCustomer().getCustomerId();
 		int count=loanRequestDao.getAvailedLoans(custId, CgConstants.LOAN_APPROVED);
 		
+		/*checking the first condition, which is nothing but, to check if the customer had availed loans previously and if yes, the count will be 
+		greater than zero and the loan will be rejected if he did not availed loans from bank previously, his loan will be approved*/
 		if(count>0) {
 			req.setReqStatus(CgConstants.LOAN_REJECTED);
 			loanRequestDao.save(req);
 			throw new LoanProcessingException(CgConstants.LOAN_UNDERGOING);
 		}
+		
+		//calculating the compound interest and here the compound interest method is called
 		double ci =calculateCompoundInt(req.getLoanTenure(), req.getLoanAmount());
+		
+		//calculating the EMI and by calling calculate EMI method
 		double emi = calculateEmi(ci, req.getLoanTenure());
 		logger.info(emi+CgConstants.EMI);
+		
+		//calculating the monthly salary from annual income and obtaining half part of the monthly salary
 		double fiftyPercentOfAnnualIncome = req.getAnnualIncome() * 0.5 /12;
 		logger.info(fiftyPercentOfAnnualIncome+CgConstants.FIFTY_PERCENT_OF_SALARY);
+		
+		/*checking the second condition that decides where or not the loan request should be accepted, if EMI greater than half the salary
+		the loan should be rejected throwing an exception and if EMI is less than half the salary,, the loan request is approved*/
 		if(emi > fiftyPercentOfAnnualIncome) {
 			req.setReqStatus(CgConstants.LOAN_REJECTED);
 			loanRequestDao.save(req);
 			throw new LoanProcessingException(CgConstants.NOT_ENOUGH_INCOME);}
 		req.setReqStatus(CgConstants.LOAN_APPROVED);
 		loanRequestDao.save(req);
+		
+		/*after approving the loan request raised by the customer, the customer will be provided with a new Loan Account where he can 
+		 look after the loan amount*/
 		Account acc=new Account();
 		int loanCount=loanRequestDao.countLoansOfCustomer(custId)+1;
-		acc.setAccountId(CgConstants.LOAN+custId+""+loanCount);
+		acc.setAccountId(CgConstants.LOAN+custId+CgConstants.EMPTY+loanCount);
 		acc.setAccountName(CgConstants.PERSONAL_LOAN);
 		acc.setAccountStatus(CgConstants.ACTIVE);
 		acc.setCreatedDt(LocalDate.now());
@@ -80,12 +96,20 @@ public class LoanServiceImpl implements ILoanService {
 		accountDao.save(acc);
 		return CgConstants.APPROVED;
 			}
+
+//for calculating the compound interest
 	public double calculateCompoundInt(int years,double amt) {
 		return amt*Math.pow((1+0.1), years);
 	}
+
+
+//to calculate the EMI using Compound interest
 	public double calculateEmi(double amt,int years) {
 		return amt/(years*12);
 	}
+
+	
+//for validating the login details and this method is linked to login MicroService
 	@Override
 	public String validateTokenInAdminLoginService(String tokenId) throws LoginException{
 		if(tokenId==null||tokenId.length()==0)
@@ -97,7 +121,7 @@ public class LoanServiceImpl implements ILoanService {
 			throw new LoginException(CgConstants.USE_NOT_AUTHENTICATED);
 		return role;
 	}
-
+//this method displays the approved/accepted loans
 	@Override
 	public List<LoanRequest> viewAcceptedLoans() throws NoRequestsFoundException {
 		List<LoanRequest> loanRequestList= loanRequestDao.getAcceptedRequests(CgConstants.APPROVED_REQUESTS);
@@ -107,7 +131,7 @@ public class LoanServiceImpl implements ILoanService {
 		return loanRequestList;
 		
 	}
-
+//this method is used for displaying the rejected loans
 	@Override
 	public List<LoanRequest> viewRejectedLoans() throws NoRequestsFoundException {
 		List<LoanRequest> loanRequestList= loanRequestDao.getRejectedRequests(CgConstants.REJECTED_REQUESTS);
@@ -116,7 +140,7 @@ public class LoanServiceImpl implements ILoanService {
 		loanRequestList.sort((loanRequest1,loanRequest2)->loanRequest1.getDateOfRequest().compareTo(loanRequest2.getDateOfRequest()));
 		return loanRequestList;
 	}
-
+//This method displays the account details after a loan account gets added after the approval of the loan of a customer
 	@Override
 	public List<Account> getUpdatedAccountList() {
 		

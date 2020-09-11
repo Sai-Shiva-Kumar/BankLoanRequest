@@ -13,20 +13,28 @@ import com.cg.banking.service.ILoanService;
 class BankViewAndProcessLoanRequestsApplicationTests {
 	@Autowired
 	ILoanService loanService;
+	
+	//success test case
 	@Test
 	void approvedLoanRequestsFoundTest() throws NoRequestsFoundException {
 		List<LoanRequest> list=loanService.viewAcceptedLoans();
 		assertTrue(!list.isEmpty());
 	}
+	
+	//success test case
 	@Test
 	void rejectedLoanRequestsFoundTest() throws NoRequestsFoundException {
 		List<LoanRequest> list=loanService.viewRejectedLoans();
 		assertTrue(!list.isEmpty());;
 	}
+	
+	//failure test case
 	@Test
 	void getLoanRequestsFailTest() throws NoRequestsFoundException {
 		assertThrows(NoRequestsFoundException.class,()->loanService.viewAllLoanRequests());
 	}
+	
+	//failure test case
 	@Test
 	public void testProcessByIdFound() throws NoRequestsFoundException, LoanProcessingException {
 		assertThrows(NoRequestsFoundException.class,()->loanService.processLoanRequest("lN121212"));

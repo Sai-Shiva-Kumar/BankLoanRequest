@@ -1,5 +1,5 @@
 package com.cg.banking.dto;
-
+//to display error message in user friendly manner
 public class Error {
 	private String status;
 	private String message;
