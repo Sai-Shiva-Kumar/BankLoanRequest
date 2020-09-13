@@ -70,12 +70,12 @@ public class LoanServiceImpl implements ILoanService {
 		logger.info(emi+CgConstants.EMI);
 		
 		//calculating the monthly salary from annual income and obtaining half part of the monthly salary
-		double fiftyPercentOfAnnualIncome = req.getAnnualIncome() * 0.5 /12;
-		logger.info(fiftyPercentOfAnnualIncome+CgConstants.FIFTY_PERCENT_OF_SALARY);
+		double fiftyPercentOfMonthlyIncome = req.getAnnualIncome() * 0.5 /12;
+		logger.info(fiftyPercentOfMonthlyIncome+CgConstants.FIFTY_PERCENT_OF_SALARY);
 		
 		/*checking the second condition that decides where or not the loan request should be accepted, if EMI greater than half the salary
 		the loan should be rejected throwing an exception and if EMI is less than half the salary,, the loan request is approved*/
-		if(emi > fiftyPercentOfAnnualIncome) {
+		if(emi > fiftyPercentOfMonthlyIncome) {
 			req.setReqStatus(CgConstants.LOAN_REJECTED);
 			loanRequestDao.save(req);
 			throw new LoanProcessingException(CgConstants.NOT_ENOUGH_INCOME);}

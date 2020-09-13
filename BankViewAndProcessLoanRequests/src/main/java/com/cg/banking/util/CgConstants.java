@@ -29,6 +29,8 @@ public class CgConstants {
     	public static final String APPROVED_LOAN_REQUESTS_URL="viewapprovedloanrequests";
     	public static final String REJECTED_LOAN_REQUESTS_URL="viewrejectedloanrequests";
 		public static final String EMPTY ="";
+		public static final String ADMIN ="admin";
+		public static final String ONLY_ADMIN_IS_ALLOWED="you are not authorized user, only admin can use this feature";
 
 }
 

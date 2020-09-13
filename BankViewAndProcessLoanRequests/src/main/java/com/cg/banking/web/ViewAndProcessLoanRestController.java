@@ -41,6 +41,8 @@ public class ViewAndProcessLoanRestController {
 		logger.info(CgConstants.TOKEN_ID+ tokenId);
 				String role=loanService.validateTokenInAdminLoginService(tokenId);
 		logger.info(CgConstants.ROLE+role);
+		if(!role.contentEquals(CgConstants.ADMIN))
+			throw new LoginException(CgConstants.ONLY_ADMIN_IS_ALLOWED);
 	    List<LoanRequest> loanRequestList= loanService.viewAllLoanRequests();
 		return loanRequestList;
 	}
@@ -48,7 +50,14 @@ public class ViewAndProcessLoanRestController {
 	
 	//to process loan requests raised by customer based on the loan request ID
 	@GetMapping(CgConstants.PROCESS_REQUESTS_BY_ID)  //get method for fetching the details
-	public LoanSuccessMessage processLoanRequest(@PathVariable("reqID") String requestId) throws NoRequestsFoundException, LoanProcessingException {
+	public LoanSuccessMessage processLoanRequest(@RequestHeader(name="tokenId",required=false) String tokenId, 
+			@PathVariable("reqID") String requestId) throws NoRequestsFoundException, LoanProcessingException, LoginException {
+		
+		logger.info(CgConstants.TOKEN_ID+ tokenId);
+		String role=loanService.validateTokenInAdminLoginService(tokenId);
+            logger.info(CgConstants.ROLE+role);
+          if(!role.contentEquals(CgConstants.ADMIN))
+	            throw new LoginException(CgConstants.ONLY_ADMIN_IS_ALLOWED);
 		String res=loanService.processLoanRequest(requestId);
 		return new LoanSuccessMessage(res); //displays the success message
 	}
